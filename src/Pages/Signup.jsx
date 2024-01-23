@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { UserAuth } from "../context/authContext";
 
 const Signup = () => {
@@ -8,14 +8,17 @@ const Signup = () => {
   const [error, setError] = useState("");
   const { createUser } = UserAuth();
 
+  const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     try {
       await createUser(email, password);
-    } catch (e) {
-      setError(e.message);
-      console.log(e.message);
+      navigate("/account");
+    } catch (error) {
+      setError(error.message);
+      console.log(error.message);
     }
   };
 
@@ -34,6 +37,7 @@ const Signup = () => {
         <div className="flex flex-col py-2">
           <label className="py-2 font-medium">Email Address</label>
           <input
+            autoComplete="email"
             onChange={(e) => setEmail(e.target.value)}
             className="border p-3"
             type="email"
@@ -42,6 +46,7 @@ const Signup = () => {
         <div className="flex flex-col py-2">
           <label className="py-2 font-medium">Password</label>
           <input
+            autoComplete="current-password"
             onChange={(e) => setPassword(e.target.value)}
             className="border p-3"
             type="password"
