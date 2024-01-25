@@ -28,7 +28,6 @@ const App = () => {
           />
         </Routes>
       </AuthContextProvider>
-      {/* <Home /> */}
     </section>
   );
 };

@@ -11,7 +11,9 @@ import {
   doc,
   addDoc,
   deleteDoc,
+  where,
 } from "firebase/firestore";
+import { UserAuth } from "../context/AuthContext";
 
 const Home = () => {
   const style = {
@@ -23,6 +25,10 @@ const Home = () => {
     button: `border p-4 ml-2 bg-purple-500 text-slate-100`,
     count: `text-center p-2`,
   };
+
+  const { user, activeUser } = UserAuth();
+
+  console.log(user.email, "users");
 
   const [todos, setTodos] = useState([]); // store values of todos in state
   const [input, setInput] = useState(""); // store values of input in state
@@ -39,6 +45,7 @@ const Home = () => {
     }
     await addDoc(collection(db, "todos"), {
       // creates or updated the collection todos if it already exists
+      email: user.email,
       text: input, //adds text  to todos collection
       completed: false, // adds completed to todos collection
     });
@@ -47,16 +54,20 @@ const Home = () => {
 
   // Read Todo
   useEffect(() => {
-    const querry = query(collection(db, "todos")); // write or checks the db
-    const unsubscribe = onSnapshot(querry, (QuerySnapshot) => {
+    const querry = query(
+      collection(db, "todos"),
+      where("email", "==", user.email)
+    ); // write or checks the db
+    const unsubscribe = onSnapshot(querry, (snapshot) => {
       // take snapshots,screenshot of your db to see if any changes happened
       let todosArr = []; // creates an empty array to store todos for later
 
-      QuerySnapshot.forEach((doc) => {
+      snapshot.forEach((doc) => {
         // iterates or loops through the data of the Query snapshot
         todosArr.push({ ...doc.data(), id: doc.id }); // pushes data into the new array with new id for each
         console.log(doc.data(), "data");
       });
+
       setTodos(todosArr); // update values of todos
     });
     return () => unsubscribe;
@@ -66,10 +77,12 @@ const Home = () => {
 
   const toggleComplete = async (todo) => {
     // function to update todos in the collection
-    await updateDoc(doc(db, "todos", todo.id), {
+
+    await updateDoc(doc(db, "todos", todo.id, user.email), {
       // update the value of todos using the id
       completed: !todo.completed, // changes the value of field : completed
     });
+    console.log(user.email);
   };
 
   // DeleteTodo
@@ -81,7 +94,7 @@ const Home = () => {
     <>
       <section className={style.bg}>
         <div className={style.container}>
-          <h3 className={style.heading}>Todo App</h3>
+          <h3 className={style.heading}>Todo App of {user.email}</h3>
           <form className={style.form} onSubmit={createTodo}>
             <input
               className={style.input}
@@ -94,6 +107,7 @@ const Home = () => {
           </form>
           <ul>
             {todos.map((todo, index) => {
+              // if (user.email === todo.email) {
               return (
                 <Todo
                   key={index}
@@ -102,6 +116,9 @@ const Home = () => {
                   deleteTodo={deleteTodo}
                 />
               );
+              // } else {
+              //   <h1>hello world</h1>;
+              // }
             })}
           </ul>
           {todos.length < 1 ? null : (

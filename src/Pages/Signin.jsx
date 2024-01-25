@@ -14,7 +14,7 @@ const Signin = () => {
     setError("");
     try {
       await signIn(email, password);
-      navigate("/account");
+      navigate("/Account");
     } catch (e) {
       setError(e.message);
       console.log(e.message);

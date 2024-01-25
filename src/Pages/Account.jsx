@@ -1,6 +1,7 @@
 import React from "react";
 import { UserAuth } from "../context/authContext";
 import { useNavigate } from "react-router-dom";
+import Home from "./Home";
 
 const Account = () => {
   const { user, logout } = UserAuth();
@@ -24,6 +25,7 @@ const Account = () => {
       <button onClick={handleLogout} className="border px-6 py-2 my-4">
         Logout
       </button>
+      <Home />
     </div>
   );
 };

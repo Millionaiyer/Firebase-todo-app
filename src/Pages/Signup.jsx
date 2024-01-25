@@ -18,6 +18,7 @@ const Signup = () => {
       navigate("/account");
     } catch (error) {
       setError(error.message);
+      alert(error.message);
       console.log(error.message);
     }
   };
