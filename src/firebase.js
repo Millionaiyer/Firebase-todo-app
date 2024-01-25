@@ -5,9 +5,14 @@ import { getAuth } from "firebase/auth";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
+const apikey = import.meta.env.VITE_API_KEY;
+// const test2 = import.meta.env.DB_PASSWORD;
+// console.log("test", test);
+// console.log("test2", test2);
+
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCxvHzIfiliK4BvMYaEuK7j9GAIBJ9Yq5E",
+  apiKey: apikey,
   authDomain: "to-do-app-76371.firebaseapp.com",
   projectId: "to-do-app-76371",
   storageBucket: "to-do-app-76371.appspot.com",
